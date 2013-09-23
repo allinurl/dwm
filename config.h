@@ -1,13 +1,23 @@
 /* See LICENSE file for copyright and license details. */
 
 /* appearance */
-static const char font[] = "-*-terminus-medium-r-*-*-16-*-*-*-*-*-*-*";
-static const char normbordercolor[] = "#444444";
-static const char normbgcolor[] = "#222222";
-static const char normfgcolor[] = "#bbbbbb";
-static const char selbordercolor[] = "#005577";
-static const char selbgcolor[] = "#005577";
-static const char selfgcolor[] = "#eeeeee";
+static const char font[] =
+   "-*-stlarch-medium-r-*-*-10-*-*-*-*-*-*-*" ","
+   "-*-terminus-medium-r-*-*-12-*-*-*-*-*-*-*";
+
+#define NUMCOLORS 8
+static const char colors[NUMCOLORS][ColLast][9] = {
+   /* border   foreground  background */
+   {"#212121", "#696969", "#121212"},   /* 0 = normal */
+   {"#212121", "#E0E0E0", "#121212"},   /* 1 = selected */
+   {"#212121", "#4586de", "#121212"},   /* 2 = urgent */
+   {"#212121", "#7bde45", "#121212"},   /* 3 = green */
+   {"#212121", "#fedd26", "#121212"},   /* 4 = yellow */
+   {"#212121", "#e55555", "#121212"},   /* 5 = cyan */
+   {"#212121", "#006699", "#121212"},   /* 6 = magenta */
+   {"#212121", "#C0C0C0", "#121212"},   /* 7 = grey */
+};
+
 static const unsigned int borderpx = 1; /* border pixel of windows */
 static const unsigned int snap = 32;    /* snap pixel */
 static const Bool showbar = True;       /* False means no bar */
@@ -47,8 +57,9 @@ static const Layout layouts[] = {
 
 /* commands */
 static const char *dmenucmd[] =
-   { "dmenu_run", "-fn", font, "-nb", normbgcolor, "-nf", normfgcolor, "-sb",
-selbgcolor, "-sf", selfgcolor, NULL };
+   { "dmenu_run", "-fn", font, "-nb", colors[0][ColBG], "-nf", colors[0][ColFG],
+   "-sb", colors[1][ColBG], "-sf", colors[1][ColFG], NULL
+};
 static const char *termcmd[] = { "uxterm", NULL };
 
 static Key keys[] = {
