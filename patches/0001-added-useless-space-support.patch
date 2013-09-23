@@ -1,0 +1,143 @@
+From 2d93ec44e4f8a91939823660f0637d81cfd3078e Mon Sep 17 00:00:00 2001
+From: Gerardo Orellana <goaccess@prosoftcorp.com>
+Date: Sun, 22 Sep 2013 19:22:40 -0500
+Subject: [PATCH] added useless space support
+
+---
+ config.h | 35 ++++++++++++++++++-----------------
+ dwm.c    | 24 +++++++++++++++++-------
+ 2 files changed, 35 insertions(+), 24 deletions(-)
+
+diff --git a/config.h b/config.h
+index 8bba9cf..7889aa1 100644
+--- a/config.h
++++ b/config.h
+@@ -8,20 +8,21 @@ static const char font[] =
+ #define NUMCOLORS 8
+ static const char colors[NUMCOLORS][ColLast][9] = {
+    /* border   foreground  background */
+-   {"#212121", "#696969", "#121212"},   /* 0 = normal */
++   {"#212121", "#696969", "#121212"},   /* 0 = normal   */
+    {"#212121", "#E0E0E0", "#121212"},   /* 1 = selected */
+-   {"#212121", "#4586de", "#121212"},   /* 2 = urgent */
+-   {"#212121", "#7bde45", "#121212"},   /* 3 = green */
+-   {"#212121", "#fedd26", "#121212"},   /* 4 = yellow */
+-   {"#212121", "#e55555", "#121212"},   /* 5 = cyan */
+-   {"#212121", "#006699", "#121212"},   /* 6 = magenta */
+-   {"#212121", "#C0C0C0", "#121212"},   /* 7 = grey */
++   {"#212121", "#4586de", "#121212"},   /* 2 = urgent   */
++   {"#212121", "#7bde45", "#121212"},   /* 3 = green    */
++   {"#212121", "#fedd26", "#121212"},   /* 4 = yellow   */
++   {"#212121", "#e55555", "#121212"},   /* 5 = cyan     */
++   {"#212121", "#006699", "#121212"},   /* 6 = magenta  */
++   {"#212121", "#C0C0C0", "#121212"},   /* 7 = grey     */
+ };
+ 
+-static const unsigned int borderpx = 1; /* border pixel of windows */
+-static const unsigned int snap = 32;    /* snap pixel */
+-static const Bool showbar = True;       /* False means no bar */
+-static const Bool topbar = True;        /* False means bottom bar */
++static const unsigned int borderpx = 1; /* border pixel of windows   */
++static const unsigned int gappx = 7;    /* gap pixel between windows */
++static const unsigned int snap = 8;     /* snap pixel                */
++static const Bool showbar = True;       /* False means no bar        */
++static const Bool topbar = True;        /* False means bottom bar    */
+ 
+ /* tagging */
+ static const char *tags[] = { "1", "2", "3", "4", "5", "6", "7", "8", "9" };
+@@ -33,15 +34,15 @@ static const Rule rules[] = {
+ };
+ 
+ /* layout(s) */
+-static const float mfact = 0.55;        /* factor of master area size [0.05..0.95] */
+-static const int nmaster = 1;   /* number of clients in master area */
+-static const Bool resizehints = True;   /* True means respect size hints in tiled resizals */
++static const float mfact = 0.55;        /* factor of master area size [0.05..0.95]         */
++static const int nmaster = 1;   /* number of clients in master area                */
++static const Bool resizehints = False;  /* True means respect size hints in tiled resizals */
+ 
+ static const Layout layouts[] = {
+    /* symbol     arrange function */
+-   {"[]=", tile},               /* first entry is default */
+-   {"><>", NULL},               /* no layout function means floating behavior */
+-   {"[M]", monocle},
++   {"\uE005", True, tile},
++   {"\uE011", False, NULL},
++   {"[M]", False, monocle},
+ };
+ 
+ /* key definitions */
+diff --git a/dwm.c b/dwm.c
+index a545e5c..53fee02 100644
+--- a/dwm.c
++++ b/dwm.c
+@@ -135,6 +135,7 @@ typedef struct
+ typedef struct
+ {
+    const char *symbol;
++   Bool addgaps;
+    void (*arrange) (Monitor *);
+ } Layout;
+ 
+@@ -299,6 +300,7 @@ static Display *dpy;
+ static DC dc;
+ static Monitor *mons = NULL, *selmon = NULL;
+ static Window root;
++static int gap;
+ 
+ /* configuration, allows nested code to access above variables */
+ #include "config.h"
+@@ -506,7 +508,7 @@ void
+ cleanup (void)
+ {
+    Arg a = {.ui = ~0 };
+-   Layout foo = { "", NULL };
++   Layout foo = { "", False, NULL };
+    Monitor *m;
+ 
+    view (&a);
+@@ -1462,14 +1464,22 @@ resizeclient (Client * c, int x, int y, int w, int h)
+ {
+    XWindowChanges wc;
+ 
++   gap = c->isfloating ? 0 : c->mon->lt[c->mon->sellt]->addgaps ? gappx : 0;
+    c->oldx = c->x;
+-   c->x = wc.x = x;
++   c->x = wc.x = x + gap;
+    c->oldy = c->y;
+-   c->y = wc.y = y;
++   c->y = wc.y = y + gap;
+    c->oldw = c->w;
+-   c->w = wc.width = w;
++   c->w = wc.width =
++      w -
++      (gap ? (x + w + (c->bw * 2) == c->mon->mx + c->mon->mw ? 2 : 1) *
++       gap : 0);
+    c->oldh = c->h;
+-   c->h = wc.height = h;
++   c->h = wc.height =
++      h -
++      (gap ? (y + h + (c->bw * 2) == c->mon->my + c->mon->mh ? 2 : 1) *
++       gap : 0);
++
+    wc.border_width = c->bw;
+    XConfigureWindow (dpy, c->win,
+                      CWX | CWY | CWWidth | CWHeight | CWBorderWidth, &wc);
+@@ -1882,12 +1892,12 @@ tile (Monitor * m)
+          h = (m->wh - my) / (MIN (n, m->nmaster) - i);
+          resize (c, m->wx, m->wy + my, mw - (2 * c->bw), h - (2 * c->bw),
+                  False);
+-         my += HEIGHT (c);
++         my += HEIGHT (c) + gap;
+       } else {
+          h = (m->wh - ty) / (n - i);
+          resize (c, m->wx + mw, m->wy + ty, m->ww - mw - (2 * c->bw),
+                  h - (2 * c->bw), False);
+-         ty += HEIGHT (c);
++         ty += HEIGHT (c) + gap;
+       }
+ }
+ 
+-- 
+1.8.4
+

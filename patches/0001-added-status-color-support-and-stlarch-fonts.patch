@@ -1,0 +1,463 @@
+From 6f6275750c778f9cfc8b11cabb2b39133267dd11 Mon Sep 17 00:00:00 2001
+From: Gerardo Orellana <goaccess@prosoftcorp.com>
+Date: Sun, 22 Sep 2013 19:01:33 -0500
+Subject: [PATCH] added status color support and stlarch fonts
+
+---
+ config.def.h      |   3 +-
+ config.h          |  29 +++++++++-----
+ dwm.c             | 113 +++++++++++++++++++++++++++++++++++++-----------------
+ fonts/stlarch.pcf | Bin 0 -> 25212 bytes
+ 4 files changed, 99 insertions(+), 46 deletions(-)
+ create mode 100644 fonts/stlarch.pcf
+
+diff --git a/config.def.h b/config.def.h
+index 2ab6e1c..5404863 100644
+--- a/config.def.h
++++ b/config.def.h
+@@ -48,7 +48,8 @@ static const Layout layouts[] = {
+ /* commands */
+ static const char *dmenucmd[] =
+    { "dmenu_run", "-fn", font, "-nb", normbgcolor, "-nf", normfgcolor, "-sb",
+-selbgcolor, "-sf", selfgcolor, NULL };
++   selbgcolor, "-sf", selfgcolor, NULL
++};
+ static const char *termcmd[] = { "uxterm", NULL };
+ 
+ static Key keys[] = {
+diff --git a/config.h b/config.h
+index 2ab6e1c..8bba9cf 100644
+--- a/config.h
++++ b/config.h
+@@ -1,13 +1,23 @@
+ /* See LICENSE file for copyright and license details. */
+ 
+ /* appearance */
+-static const char font[] = "-*-terminus-medium-r-*-*-16-*-*-*-*-*-*-*";
+-static const char normbordercolor[] = "#444444";
+-static const char normbgcolor[] = "#222222";
+-static const char normfgcolor[] = "#bbbbbb";
+-static const char selbordercolor[] = "#005577";
+-static const char selbgcolor[] = "#005577";
+-static const char selfgcolor[] = "#eeeeee";
++static const char font[] =
++   "-*-stlarch-medium-r-*-*-10-*-*-*-*-*-*-*" ","
++   "-*-terminus-medium-r-*-*-12-*-*-*-*-*-*-*";
++
++#define NUMCOLORS 8
++static const char colors[NUMCOLORS][ColLast][9] = {
++   /* border   foreground  background */
++   {"#212121", "#696969", "#121212"},   /* 0 = normal */
++   {"#212121", "#E0E0E0", "#121212"},   /* 1 = selected */
++   {"#212121", "#4586de", "#121212"},   /* 2 = urgent */
++   {"#212121", "#7bde45", "#121212"},   /* 3 = green */
++   {"#212121", "#fedd26", "#121212"},   /* 4 = yellow */
++   {"#212121", "#e55555", "#121212"},   /* 5 = cyan */
++   {"#212121", "#006699", "#121212"},   /* 6 = magenta */
++   {"#212121", "#C0C0C0", "#121212"},   /* 7 = grey */
++};
++
+ static const unsigned int borderpx = 1; /* border pixel of windows */
+ static const unsigned int snap = 32;    /* snap pixel */
+ static const Bool showbar = True;       /* False means no bar */
+@@ -47,8 +57,9 @@ static const Layout layouts[] = {
+ 
+ /* commands */
+ static const char *dmenucmd[] =
+-   { "dmenu_run", "-fn", font, "-nb", normbgcolor, "-nf", normfgcolor, "-sb",
+-selbgcolor, "-sf", selfgcolor, NULL };
++   { "dmenu_run", "-fn", font, "-nb", colors[0][ColBG], "-nf", colors[0][ColFG],
++   "-sb", colors[1][ColBG], "-sf", colors[1][ColFG], NULL
++};
+ static const char *termcmd[] = { "uxterm", NULL };
+ 
+ static Key keys[] = {
+diff --git a/dwm.c b/dwm.c
+index 83365ae..a545e5c 100644
+--- a/dwm.c
++++ b/dwm.c
+@@ -54,6 +54,7 @@
+ #define HEIGHT(X)               ((X)->h + 2 * (X)->bw)
+ #define TAGMASK                 ((1 << LENGTH(tags)) - 1)
+ #define TEXTW(X)                (textnw(X, strlen(X)) + dc.font.height)
++#define MAXCOLORS               9
+ 
+ /* enums */
+ enum
+@@ -110,8 +111,7 @@ struct Client
+ typedef struct
+ {
+    int x, y, w, h;
+-   unsigned long norm[ColLast];
+-   unsigned long sel[ColLast];
++   unsigned long colors[MAXCOLORS][ColLast];
+    Drawable drawable;
+    GC gc;
+    struct
+@@ -195,10 +195,9 @@ static void die (const char *errstr, ...);
+ static Monitor *dirtomon (int dir);
+ static void drawbar (Monitor * m);
+ static void drawbars (void);
+-static void drawsquare (Bool filled, Bool empty, Bool invert,
+-                        unsigned long col[ColLast]);
+-static void drawtext (const char *text, unsigned long col[ColLast],
+-                      Bool invert);
++static void drawcoloredtext (char *text);
++static void drawsquare (Bool filled, Bool empty, unsigned long col[ColLast]);
++static void drawtext (const char *text, unsigned long col[ColLast], Bool pad);
+ static void enternotify (XEvent * e);
+ static void expose (XEvent * e);
+ static void focus (Client * c);
+@@ -572,7 +571,7 @@ clientmessage (XEvent * e)
+       if (cme->data.l[1] == netatom[NetWMFullscreen] ||
+           cme->data.l[2] == netatom[NetWMFullscreen])
+          setfullscreen (c, (cme->data.l[0] == 1 /* _NET_WM_STATE_ADD    */
+-                            || (cme->data.l[0] == 2 /* _NET_WM_STATE_TOGGLE */ 
++                            || (cme->data.l[0] == 2     /* _NET_WM_STATE_TOGGLE */
+                                 && !c->isfullscreen)));
+    } else if (cme->message_type == netatom[NetActiveWindow]) {
+       if (!ISVISIBLE (c)) {
+@@ -773,34 +772,36 @@ drawbar (Monitor * m)
+    dc.x = 0;
+    for (i = 0; i < LENGTH (tags); i++) {
+       dc.w = TEXTW (tags[i]);
+-      col = m->tagset[m->seltags] & 1 << i ? dc.sel : dc.norm;
+-      drawtext (tags[i], col, urg & 1 << i);
+-      drawsquare (m == selmon && selmon->sel && selmon->sel->tags & 1 << i,
+-                  occ & 1 << i, urg & 1 << i, col);
++      col =
++         dc.
++         colors[(m->tagset[m->seltags] & 1 << i) ? 1 : (urg & 1 << i ? 2 : 0)];
++      drawtext (tags[i], col, True);
++      drawsquare (m == selmon && selmon->sel &&
++                  selmon->sel->tags & 1 << i, occ & 1 << i, col);
+       dc.x += dc.w;
+    }
+    dc.w = blw = TEXTW (m->ltsymbol);
+-   drawtext (m->ltsymbol, dc.norm, False);
++   drawtext (m->ltsymbol, dc.colors[0], False);
+    dc.x += dc.w;
+    x = dc.x;
+    if (m == selmon) {           /* status is only drawn on selected monitor */
+-      dc.w = TEXTW (stext);
++      dc.w = textnw (stext, strlen (stext));
+       dc.x = m->ww - dc.w;
+       if (dc.x < x) {
+          dc.x = x;
+          dc.w = m->ww - x;
+       }
+-      drawtext (stext, dc.norm, False);
++      drawcoloredtext (stext);
+    } else
+       dc.x = m->ww;
+    if ((dc.w = dc.x - x) > bh) {
+       dc.x = x;
+       if (m->sel) {
+-         col = m == selmon ? dc.sel : dc.norm;
+-         drawtext (m->sel->name, col, False);
+-         drawsquare (m->sel->isfixed, m->sel->isfloating, False, col);
++         col = dc.colors[m == selmon ? 1 : 0];
++         drawtext (m->sel->name, col, True);
++         drawsquare (m->sel->isfixed, m->sel->isfloating, col);
+       } else
+-         drawtext (NULL, dc.norm, False);
++         drawtext (NULL, dc.colors[0], False);
+    }
+    XCopyArea (dpy, dc.drawable, m->barwin, dc.gc, 0, 0, m->ww, bh, 0, 0);
+    XSync (dpy, False);
+@@ -816,11 +817,37 @@ drawbars (void)
+ }
+ 
+ void
+-drawsquare (Bool filled, Bool empty, Bool invert, unsigned long col[ColLast])
++drawcoloredtext (char *text)
++{
++   char *buf = text, *ptr = buf, c = 1;
++   unsigned long *col = dc.colors[0];
++   int i, ox = dc.x;
++
++   while (*ptr) {
++      for (i = 0; *ptr < 0 || *ptr > NUMCOLORS; i++, ptr++);
++      if (!*ptr)
++         break;
++      c = *ptr;
++      *ptr = 0;
++      if (i) {
++         dc.w = selmon->ww - dc.x;
++         drawtext (buf, col, False);
++         dc.x += textnw (buf, i);
++      }
++      *ptr = c;
++      col = dc.colors[c - 1];
++      buf = ++ptr;
++   }
++   drawtext (buf, col, False);
++   dc.x = ox;
++}
++
++void
++drawsquare (Bool filled, Bool empty, unsigned long col[ColLast])
+ {
+    int x;
+ 
+-   XSetForeground (dpy, dc.gc, col[invert ? ColBG : ColFG]);
++   XSetForeground (dpy, dc.gc, col[ColFG]);
+    x = (dc.font.ascent + dc.font.descent + 2) / 4;
+    if (filled)
+       XFillRectangle (dpy, dc.drawable, dc.gc, dc.x + 1, dc.y + 1, x + 1,
+@@ -830,18 +857,18 @@ drawsquare (Bool filled, Bool empty, Bool invert, unsigned long col[ColLast])
+ }
+ 
+ void
+-drawtext (const char *text, unsigned long col[ColLast], Bool invert)
++drawtext (const char *text, unsigned long col[ColLast], Bool pad)
+ {
+    char buf[256];
+    int i, x, y, h, len, olen;
+ 
+-   XSetForeground (dpy, dc.gc, col[invert ? ColFG : ColBG]);
++   XSetForeground (dpy, dc.gc, col[ColBG]);
+    XFillRectangle (dpy, dc.drawable, dc.gc, dc.x, dc.y, dc.w, dc.h);
+    if (!text)
+       return;
+    olen = strlen (text);
+-   h = dc.font.ascent + dc.font.descent;
+-   y = dc.y + (dc.h / 2) - (h / 2) + dc.font.ascent;
++   h = pad ? (dc.font.ascent + dc.font.descent) : 0;
++   y = dc.y + ((dc.h + dc.font.ascent - dc.font.descent) / 2);
+    x = dc.x + (h / 2);
+    /* shorten text if necessary */
+    for (len = MIN (olen, sizeof buf); len && textnw (text, len) > dc.w - h;
+@@ -851,7 +878,7 @@ drawtext (const char *text, unsigned long col[ColLast], Bool invert)
+    memcpy (buf, text, len);
+    if (len < olen)
+       for (i = len; i && i > len - 3; buf[--i] = '.');
+-   XSetForeground (dpy, dc.gc, col[invert ? ColBG : ColFG]);
++   XSetForeground (dpy, dc.gc, col[ColFG]);
+    if (dc.font.set)
+       XmbDrawString (dpy, dc.drawable, dc.font.set, dc.gc, x, y, buf, len);
+    else
+@@ -904,7 +931,7 @@ focus (Client * c)
+       detachstack (c);
+       attachstack (c);
+       grabbuttons (c, True);
+-      XSetWindowBorder (dpy, c->win, dc.sel[ColBorder]);
++      XSetWindowBorder (dpy, c->win, dc.colors[1][ColBorder]);
+       setfocus (c);
+    } else
+       XSetInputFocus (dpy, root, RevertToPointerRoot, CurrentTime);
+@@ -1211,7 +1238,7 @@ manage (Window w, XWindowAttributes * wa)
+ 
+    wc.border_width = c->bw;
+    XConfigureWindow (dpy, w, CWBorderWidth, &wc);
+-   XSetWindowBorder (dpy, w, dc.norm[ColBorder]);
++   XSetWindowBorder (dpy, w, dc.colors[0][ColBorder]);
+    configure (c);               /* propagates border_width, if size doesn't change */
+    updatewindowtype (c);
+    updatesizehints (c);
+@@ -1722,12 +1749,11 @@ setup (void)
+    cursor[CurResize] = XCreateFontCursor (dpy, XC_sizing);
+    cursor[CurMove] = XCreateFontCursor (dpy, XC_fleur);
+    /* init appearance */
+-   dc.norm[ColBorder] = getcolor (normbordercolor);
+-   dc.norm[ColBG] = getcolor (normbgcolor);
+-   dc.norm[ColFG] = getcolor (normfgcolor);
+-   dc.sel[ColBorder] = getcolor (selbordercolor);
+-   dc.sel[ColBG] = getcolor (selbgcolor);
+-   dc.sel[ColFG] = getcolor (selfgcolor);
++   for (int i = 0; i < NUMCOLORS; i++) {
++      dc.colors[i][ColBorder] = getcolor (colors[i][ColBorder]);
++      dc.colors[i][ColFG] = getcolor (colors[i][ColFG]);
++      dc.colors[i][ColBG] = getcolor (colors[i][ColBG]);
++   }
+    dc.drawable =
+       XCreatePixmap (dpy, root, DisplayWidth (dpy, screen), bh,
+                      DefaultDepth (dpy, screen));
+@@ -1812,13 +1838,28 @@ tagmon (const Arg * arg)
+ int
+ textnw (const char *text, unsigned int len)
+ {
++   char *ptr = (char *) text;
++   unsigned int i, ibuf, lenbuf = len;
++   char buf[len + 1];
+    XRectangle r;
+ 
++   for (i = 0, ibuf = 0; *ptr && i < len; i++, ptr++) {
++      if (*ptr <= NUMCOLORS && *ptr > 0) {
++         if (i < len) {
++            lenbuf--;
++         }
++      } else {
++         buf[ibuf] = *ptr;
++         ibuf++;
++      }
++   }
++   buf[ibuf] = 0;
++
+    if (dc.font.set) {
+-      XmbTextExtents (dc.font.set, text, len, NULL, &r);
++      XmbTextExtents (dc.font.set, buf, lenbuf, NULL, &r);
+       return r.width;
+    }
+-   return XTextWidth (dc.font.xfont, text, len);
++   return XTextWidth (dc.font.xfont, buf, lenbuf);
+ }
+ 
+ void
+@@ -1906,7 +1947,7 @@ unfocus (Client * c, Bool setfocus)
+    if (!c)
+       return;
+    grabbuttons (c, False);
+-   XSetWindowBorder (dpy, c->win, dc.norm[ColBorder]);
++   XSetWindowBorder (dpy, c->win, dc.colors[0][ColBorder]);
+    if (setfocus)
+       XSetInputFocus (dpy, root, RevertToPointerRoot, CurrentTime);
+ }
+diff --git a/fonts/stlarch.pcf b/fonts/stlarch.pcf
+new file mode 100644
+index 0000000000000000000000000000000000000000..f8ff72c853cd208eed1d2abc87c8570693383a98
+GIT binary patch
+literal 25212
+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
+
+literal 0
+HcmV?d00001
+
+-- 
+1.8.4
+
