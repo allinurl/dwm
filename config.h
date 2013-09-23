@@ -8,20 +8,21 @@ static const char font[] =
 #define NUMCOLORS 8
 static const char colors[NUMCOLORS][ColLast][9] = {
    /* border   foreground  background */
-   {"#212121", "#696969", "#121212"},   /* 0 = normal */
+   {"#212121", "#696969", "#121212"},   /* 0 = normal   */
    {"#212121", "#E0E0E0", "#121212"},   /* 1 = selected */
-   {"#212121", "#4586de", "#121212"},   /* 2 = urgent */
-   {"#212121", "#7bde45", "#121212"},   /* 3 = green */
-   {"#212121", "#fedd26", "#121212"},   /* 4 = yellow */
-   {"#212121", "#e55555", "#121212"},   /* 5 = cyan */
-   {"#212121", "#006699", "#121212"},   /* 6 = magenta */
-   {"#212121", "#C0C0C0", "#121212"},   /* 7 = grey */
+   {"#212121", "#4586de", "#121212"},   /* 2 = urgent   */
+   {"#212121", "#7bde45", "#121212"},   /* 3 = green    */
+   {"#212121", "#fedd26", "#121212"},   /* 4 = yellow   */
+   {"#212121", "#e55555", "#121212"},   /* 5 = cyan     */
+   {"#212121", "#006699", "#121212"},   /* 6 = magenta  */
+   {"#212121", "#C0C0C0", "#121212"},   /* 7 = grey     */
 };
 
-static const unsigned int borderpx = 1; /* border pixel of windows */
-static const unsigned int snap = 32;    /* snap pixel */
-static const Bool showbar = True;       /* False means no bar */
-static const Bool topbar = True;        /* False means bottom bar */
+static const unsigned int borderpx = 1; /* border pixel of windows   */
+static const unsigned int gappx = 7;    /* gap pixel between windows */
+static const unsigned int snap = 8;     /* snap pixel                */
+static const Bool showbar = True;       /* False means no bar        */
+static const Bool topbar = True;        /* False means bottom bar    */
 
 /* tagging */
 static const char *tags[] = { "1", "2", "3", "4", "5", "6", "7", "8", "9" };
@@ -33,15 +34,15 @@ static const Rule rules[] = {
 };
 
 /* layout(s) */
-static const float mfact = 0.55;        /* factor of master area size [0.05..0.95] */
-static const int nmaster = 1;   /* number of clients in master area */
-static const Bool resizehints = True;   /* True means respect size hints in tiled resizals */
+static const float mfact = 0.55;        /* factor of master area size [0.05..0.95]         */
+static const int nmaster = 1;   /* number of clients in master area                */
+static const Bool resizehints = False;  /* True means respect size hints in tiled resizals */
 
 static const Layout layouts[] = {
    /* symbol     arrange function */
-   {"[]=", tile},               /* first entry is default */
-   {"><>", NULL},               /* no layout function means floating behavior */
-   {"[M]", monocle},
+   {"\uE005", True, tile},
+   {"\uE011", False, NULL},
+   {"[M]", False, monocle},
 };
 
 /* key definitions */
