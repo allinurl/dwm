@@ -3,7 +3,7 @@
 # Colors: 1 = normal, 2 = selected, 3 = urgent
 
 dte(){
-dte="$(date +"%a %d %Y, %H:%M")"
+dte="$(date +"%a %b %d %Y, %H:%M:%S")"
 echo -e "\x02 \x01$dte"
 }
 
