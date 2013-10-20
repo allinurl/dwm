@@ -1,3 +1,4 @@
+#include <X11/XF86keysym.h>
 /* See LICENSE file for copyright and license details. */
 
 /* appearance */
@@ -70,6 +71,8 @@ static Key keys[] = {
    {MODKEY, XK_g, spawn, {.v = browser}},
    {MODKEY, XK_Escape, spawn, SHCMD ("xscreensaver-command -lock")},
    {MODKEY | ShiftMask, XK_Return, spawn, {.v = termcmd}},
+   {0, 0x1008ff02, spawn, SHCMD ("xbacklight -inc 25")},
+   {0, 0x1008ff03, spawn, SHCMD ("xbacklight -dec 15")},
    {MODKEY, XK_b, togglebar, {0}},
    {MODKEY, XK_Right, focusstack, {.i = +1}},
    {MODKEY, XK_Left, focusstack, {.i = -1}},
