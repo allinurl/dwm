@@ -66,7 +66,7 @@ cpu(){
 }
 
 backlight(){
-  backlight=`xbacklight`
+  backlight=`xbacklight | awk '{printf("%d\n",$1 + 0.5)}'`
   echo -e "\x02 \x01$backlight%"
 }
 
