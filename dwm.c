@@ -791,8 +791,8 @@ drawbar (Monitor * m)
    for (i = 0; i < LENGTH (tags); i++) {
       dc.w = TEXTW (tags[i]);
       col =
-         dc.
-         colors[(m->tagset[m->seltags] & 1 << i) ? 1 : (urg & 1 << i ? 2 : 0)];
+         dc.colors[(m->
+                    tagset[m->seltags] & 1 << i) ? 1 : (urg & 1 << i ? 2 : 0)];
       drawtext (tags[i], col, True);
       drawsquare (m == selmon && selmon->sel &&
                   selmon->sel->tags & 1 << i, occ & 1 << i, col);
