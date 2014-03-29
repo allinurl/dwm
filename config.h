@@ -26,7 +26,14 @@ static const Bool showbar = True;       /* False means no bar        */
 static const Bool topbar = True;        /* False means bottom bar    */
 
 /* tagging */
-static const char *tags[] = { "prod", "dev", "term", "web", "media", "misc" };
+static const char *tags[] = {
+    "\uE01E prod",
+    "\uE01E dev",
+    "\uE01E term",
+    "\uE0B2 web",
+    "\uE0B9 media",
+    "\uE0BE misc"
+};
 
 static const Rule rules[] = {
    /*WM_CLASS     WM_CLASS WM_NAME
