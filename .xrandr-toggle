@@ -1,0 +1,148 @@
+#!/usr/bin/python3
+
+import sys
+
+from re import findall, MULTILINE
+from subprocess import check_output
+
+##################
+## CONFIG BEGIN ##
+##################
+# what position to set other screen relative to first screen. Leave blank to
+# skip non-cloned dual screen ouptput
+# valid options are left-of, right-of, above, below, and same-as
+POSITION_CONFIG = 'left-of'
+VERBOSE = True
+##################
+### CONFIG END ###
+##################
+
+##################
+## GLOBAL STATE ##
+##################
+LAPTOP_ONLY = 'laptop_only'
+CLONED = 'cloned'
+EXTERNAL_ONLY = 'external_only'
+POSITION = 'position'
+
+class Monitor(object):
+    def __init__(self, name, x, y, horiz, vert):
+        self.name = name
+        self.x = int(x) if x else 0
+        self.y = int(y) if y else 0
+        self.horiz = int(horiz) if horiz else 0
+        self.vert = int(vert) if vert else 0
+    def __repr__(self):
+        return "Monitor(%s, %d, %d, %d, %d)" % (self.name, self.x, self.y,
+                                                self.horiz, self.vert) 
+
+def get_monitor_data():
+    state_src = check_output(['xrandr']).decode(sys.stdout.encoding)
+    monitors = [Monitor(*x) for x in
+            findall(r"^(\w+) connected (?:(\d+)x(\d+)\+(\d+)\+(\d+))?",
+                    state_src, MULTILINE)]
+    screen = [tuple(int(y) for y in x) for x in
+              findall("^Screen.* current (\d+) x (\d+),.*", state_src)]
+    return monitors, screen
+
+def clone(mons):
+    """
+        Clone output to both monitors.
+    """
+    check_output(['xrandr', '--output', mons[0].name, '--auto', '--output',
+                  mons[1].name, '--auto']) # , '--same-as' ?
+
+def external_only(mons):
+    """
+        Set the output to the external monitor only.
+    """
+    check_output(['xrandr', '--output', mons[0].name, '--off', '--output',
+                  mons[1].name, '--auto'])
+
+def posof(mons, position):
+    """
+        Set secondary monitor relative to primary monitor.
+    """
+    check_output(['xrandr', '--output', mons[0].name, '--auto', '--output',
+                  mons[1].name, '--auto', "--%s" % position, mons[0].name])
+
+def laptop_only(mons):
+    """
+        Show only the laptop (primary) display.
+    """
+    check_output(['xrandr', '--output', mons[0].name, '--auto', '--output',
+                  mons[1].name, '--off'])
+
+def laptop_on(mons):
+    """
+        Force the first output on and hope for the best
+    """
+    if len(mons) > 1:
+        append = ['--output', mons[1].name, '--off']
+    else:
+        append = []
+    check_output(['xrandr', '--output', mons[0].name, '--auto'] + append)
+
+def get_current(mons, screen):
+    """
+    left of: 2720 x 900; 1280x800+1440+0; 1440x900+0+0
+    clone: 1440 x 900; 1280x800+0+0; 1440x900+0+0
+    """
+    if not mons[0].x and mons[1].x:
+        return EXTERNAL_ONLY
+    elif mons[0].x and not mons[1].x:
+        return LAPTOP_ONLY
+    elif mons[0].vert or mons[0].horiz:
+        return POSITION
+    elif not (mons[0].vert or mons[0].horiz or mons[1].vert or mons[1].horiz):
+        return CLONED
+    else:
+        print("Undefined monitor state!", file=sys.stderr)
+        return None # undefined state!
+
+
+# We assume the first output is always the laptop LCD output (when we care).
+# We want to cycle like so:
+    # Laptop Only
+    # Laptop External Clone
+    # External Only
+    # Laptop posof External (if posof set)
+    # to the top
+
+def main():
+    monitors, screen = get_monitor_data()
+    if len(monitors) == 1:
+        if VERBOSE:
+            print("Forcing laptop")
+        laptop_on(monitors)
+    else:
+        state = get_current(monitors, screen)
+        if VERBOSE:
+            print(state)
+        if state == LAPTOP_ONLY:
+            if VERBOSE:
+                print('switching to clone')
+            clone(monitors)
+        elif state == CLONED:
+            if VERBOSE:
+                print('switching to external only')
+            external_only(monitors)
+        elif state == EXTERNAL_ONLY:
+            if POSITION_CONFIG:
+                if VERBOSE:
+                    print('switching to %s' % POSITION_CONFIG)
+                posof(monitors, POSITION_CONFIG)
+            else:
+                if VERBOSE:
+                    print('switching to laptop only')
+                laptop_only(monitors)
+        elif state == POSITION:
+            if VERBOSE:
+                print('switching to laptop only')
+            laptop_only(monitors)
+        else:
+            print("Illegal state: %s" % state, sys.stderr)
+            laptop_on(monitors) # fail safe option, maybe clone?
+
+if __name__ == "__main__":
+    main()
