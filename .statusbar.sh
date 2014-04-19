@@ -36,7 +36,7 @@ vol(){
 
 net(){
   essid=`iwgetid | awk -F ':' '{print $2}' | sed -e 's/"//g'`
-  signal=`awk '/wlan0:/ {print $3}' /proc/net/wireless |sed -e 's/\.//g'`
+  signal=`awk '/wlp2s0:/ {print $3}' /proc/net/wireless |sed -e 's/\.//g'`
   perc=`echo $[$signal *100 /70]`
   echo -e "\x02 \x01$essid $perc"
 }
