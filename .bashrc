@@ -5,7 +5,7 @@
 # If not running interactively, don't do anything
 [[ $- != *i* ]] && return
 
-alias ls='ls --color=auto'
+alias ls='ls --color=never'
 PS1='[\u@\h \W]\$ '
 
 if [ -e /usr/share/terminfo/x/xterm-256color ]; then
@@ -15,11 +15,7 @@ else
 fi
 
 set_prompt_style () {
-    if [ -n "$SSH_CLIENT" ]; then
-        PS1="┌─[\[\e[0;35m\]\h\[\e[0m\] \[\e[1;33m\]\w:\[\e[0m\] \[\e[1;31m\]«SSH»\[\e[0m\]]\n└─╼ "
-    else
-        PS1="┌─[\[\e[35m\]\h\[\e[0m\] \[\e[32m\]\w\[\e[0m\]]\n└─╼ "
-    fi
+	PS1="\[$(tput bold)\]\[$(tput setaf 0)\]\t \[$(tput setaf 1)\][\[$(tput setaf 7)\]\u\[$(tput setaf 1)\]@\[$(tput setaf 1)\]\h \[$(tput setaf 7)\]\W\[$(tput setaf 1)\]]\[$(tput setaf 1)\]\\$ \[$(tput sgr0)\]"
 }
 
 set_prompt_style
@@ -31,3 +27,4 @@ HISTCONTROL=ignoreboth:erasedups
 # share history across all terminals
 PROMPT_COMMAND="history -a; history -c; history -r"
 export HISTSIZE PROMPT_COMMAND
+
