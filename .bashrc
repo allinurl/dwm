@@ -14,6 +14,9 @@ else
         export TERM='xterm-color'
 fi
 
+# for tmux: export 256color
+[ -n "$TMUX" ] && export TERM=screen-256color
+
 set_prompt_style () {
 	PS1="\[$(tput bold)\]\[$(tput setaf 0)\]\t \[$(tput setaf 1)\][\[$(tput setaf 7)\]\u\[$(tput setaf 1)\]@\[$(tput setaf 1)\]\h \[$(tput setaf 7)\]\W\[$(tput setaf 1)\]]\[$(tput setaf 1)\]\\$ \[$(tput sgr0)\]"
 }

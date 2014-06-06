@@ -3,3 +3,4 @@ xterm*background: grey11
 xterm*font: terminus-9
 xterm*boldMode: false
 xterm*boldFont: terminus-9
+xterm*visualBell: true
