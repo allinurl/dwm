@@ -23,11 +23,8 @@ set_prompt_style () {
 
 set_prompt_style
 
-# set history variables 
-unset HISTFILESIZE
+HISTCONTROL=ignoredups:erasedups
+shopt -s histappend
+PROMPT_COMMAND="history -n; history -w; history -c; history -r; $PROMPT_COMMAND"
 HISTSIZE="10000"
-HISTCONTROL=ignoreboth:erasedups
-# share history across all terminals
-PROMPT_COMMAND="history -a; history -c; history -r"
 export HISTSIZE PROMPT_COMMAND
-
