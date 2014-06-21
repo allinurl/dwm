@@ -23,9 +23,5 @@ set_prompt_style () {
 
 set_prompt_style
 
-HISTCONTROL=ignoredups:erasedups
-HISTCONTROL=ignorespace
-shopt -s histappend
-PROMPT_COMMAND="history -n; history -w; history -c; history -r; $PROMPT_COMMAND"
-HISTSIZE="10000"
-export HISTSIZE PROMPT_COMMAND
+export HISTCONTROL=ignoreboth:erasedups
+export HISTSIZE=1500
