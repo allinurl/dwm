@@ -1,6 +1,7 @@
-xterm*foreground: white
 xterm*background: grey11
-xterm*font: terminus-9
-xterm*boldMode: false
 xterm*boldFont: terminus-9
+xterm*boldMode: false
+xterm*font: terminus-9
+xterm*foreground: white
 xterm*visualBell: true
+xterm*charClass: 33:48,35:48,37:48,43:48,45-47:48,64:48,95:48,126:48
