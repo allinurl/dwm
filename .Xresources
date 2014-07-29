@@ -5,4 +5,5 @@ xterm*charClass: 33:48,35:48,37:48,43:48,45-47:48,64:48,95:48,126:48
 xterm*font: terminus-9
 xterm*foreground: white
 xterm*loginshell: true
+xterm*saveLines: 2000
 xterm*visualBell: true
