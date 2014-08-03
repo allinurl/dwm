@@ -2,6 +2,11 @@
 # ~/.bashrc
 #
 
+# bash options ------------------------------------
+shopt -s checkwinsize       # update the value of LINES and COLUMNS after each command if altered
+shopt -s hostcomplete       # attempt hostname expansion when @ is at the beginning of a word
+shopt -s cdspell            # autocorrects cd misspellings
+
 # If not running interactively, don't do anything
 [[ $- != *i* ]] && return
 
