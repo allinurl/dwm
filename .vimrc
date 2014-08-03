@@ -4,6 +4,7 @@ set ls=2            " allways show status line
 
 set tabstop=2
 set shiftwidth=2
+" Use spaces instead of tabs
 set expandtab
 
 set hlsearch         " highlight searches
@@ -22,6 +23,14 @@ set listchars=tab:>-
 let g:loaded_matchparen= 1
 set t_Co=256
 colorscheme hybrid
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Files, backups and undo
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Turn backup off, since most stuff is in SVN, git et.c anyway...
+set nobackup
+set nowb
+set noswapfile
 
 "autocmd BufRead,BufNewFile * syn match parens /[(){}]/ | hi parens ctermfg=cyan
 
