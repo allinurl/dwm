@@ -7,6 +7,7 @@ set shiftwidth=2
 " Use spaces instead of tabs
 set expandtab
 
+set clipboard=unnamedplus
 set hlsearch         " highlight searches
 set incsearch        " do incremental searching
 set listchars=tab:>-
@@ -18,6 +19,7 @@ set ruler            " show the cursor position all the time
 set scrolloff=3      " keep 3 lines when scrolling
 set showcmd          " display incomplete commands
 set tabpagemax=50
+set ttyfast      " don't lag…
 set visualbell t_vb= " turn off error beep/flash
 set wildmenu         " enhanced tab-completion shows all matching cmds in a popup menu
 set wildmode=list:longest,full  " full completion options
