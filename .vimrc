@@ -9,6 +9,7 @@ set expandtab
 
 set hlsearch         " highlight searches
 set incsearch        " do incremental searching
+set listchars=tab:>-
 set nobackup         " do not keep a backup file
 set novisualbell     " turn off visual bell
 set nowrap
@@ -18,7 +19,8 @@ set scrolloff=3      " keep 3 lines when scrolling
 set showcmd          " display incomplete commands
 set tabpagemax=50
 set visualbell t_vb= " turn off error beep/flash
-set listchars=tab:>-
+set wildmenu         " enhanced tab-completion shows all matching cmds in a popup menu
+set wildmode=list:longest,full  " full completion options
 
 let g:loaded_matchparen= 1
 set t_Co=256
