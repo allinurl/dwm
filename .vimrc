@@ -18,6 +18,7 @@ set number           " show line numbers
 set ruler            " show the cursor position all the time
 set scrolloff=3      " keep 3 lines when scrolling
 set showcmd          " display incomplete commands
+set showmode         " always show what mode we're currently editing in
 set tabpagemax=50
 set ttyfast      " don't lag…
 set visualbell t_vb= " turn off error beep/flash
