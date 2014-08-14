@@ -36,6 +36,10 @@ colorscheme hybrid
 set nowb
 set noswapfile
 
+set directory=~/.vim/.tmp,~/tmp,/tmp
+                                " store swap files in one of these directories
+                                "    (in case swapfile is ever turned on)
+
 "autocmd BufRead,BufNewFile * syn match parens /[(){}]/ | hi parens ctermfg=cyan
 
 autocmd FileType css setlocal shiftwidth=4 tabstop=4 expandtab
