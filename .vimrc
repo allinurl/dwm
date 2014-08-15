@@ -20,7 +20,8 @@ set scrolloff=3      " keep 3 lines when scrolling
 set showcmd          " display incomplete commands
 set showmode         " always show what mode we're currently editing in
 set tabpagemax=50
-set ttyfast      " don't lag…
+set ttyfast          " don't lag…
+set nomodeline       " disable mode lines (security measure)
 set visualbell t_vb= " turn off error beep/flash
 set wildmenu         " enhanced tab-completion shows all matching cmds in a popup menu
 set wildmode=list:longest,full  " full completion options
