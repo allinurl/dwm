@@ -11,7 +11,6 @@ set clipboard=unnamedplus
 set hlsearch         " highlight searches
 set incsearch        " do incremental searching
 set listchars=tab:>-
-set nobackup         " do not keep a backup file
 set novisualbell     " turn off visual bell
 set nowrap
 set number           " show line numbers
@@ -34,8 +33,9 @@ colorscheme hybrid
 " => Files, backups and undo
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Turn backup off, since most stuff is in SVN, git et.c anyway...
-set nowb
+set nobackup         " do not keep a backup file
 set noswapfile
+set nowritebackup 
 
 set directory=~/.vim/.tmp,~/tmp,/tmp
                                 " store swap files in one of these directories
