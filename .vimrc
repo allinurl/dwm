@@ -14,6 +14,7 @@ set listchars=tab:>-
 set novisualbell     " turn off visual bell
 set nowrap
 set number           " show line numbers
+set title            " make your xterm inherit the title from Vim
 set ruler            " show the cursor position all the time
 set scrolloff=3      " keep 3 lines when scrolling
 set showcmd          " display incomplete commands
