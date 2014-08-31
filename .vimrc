@@ -76,6 +76,16 @@ fun! IncludeGuard()
    call append( line("$"), "#endif // for #ifndef " . guard)
 endfun
 
+" Strip trailing whitespace
+map <leader>w :call StripTrailingWhitespace()<CR>
+fun! StripTrailingWhitespace()
+    " Don't strip on these filetypes
+    if &ft =~ 'markdown'
+        return
+    endif
+    %s/\s\+$//e
+endfun
+
 set encoding=utf-8                                  
 set termencoding=utf-8
 set fileencoding=utf-8
