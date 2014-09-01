@@ -31,6 +31,9 @@ let g:loaded_matchparen= 1
 set t_Co=256
 colorscheme hybrid
 
+" Toggle show/hide invisible chars
+nnoremap <leader>i :set list!<cr>
+
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Files, backups and undo
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
