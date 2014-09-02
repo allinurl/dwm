@@ -21,7 +21,6 @@ set showcmd          " display incomplete commands
 set showmode         " always show what mode we're currently editing in
 set tabpagemax=50
 set ttyfast          " don't lag…
-set splitright       " open new window to the right
 set nomodeline       " disable mode lines (security measure)
 set visualbell t_vb= " turn off error beep/flash
 set wildmenu         " enhanced tab-completion shows all matching cmds in a popup menu
