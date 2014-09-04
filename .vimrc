@@ -47,9 +47,6 @@ set directory=~/.vim/.tmp,~/tmp,/tmp
 
 "autocmd BufRead,BufNewFile * syn match parens /[(){}]/ | hi parens ctermfg=cyan
 
-autocmd FileType css setlocal shiftwidth=4 tabstop=4 expandtab
-autocmd FileType javascript setlocal shiftwidth=3 tabstop=3 expandtab
-
 set statusline=\ %{HasPaste()}%<%-15.25(%f%)%m%r%h\ %w\ \ 
 set statusline+=\ \ \ [%{&ff}/%Y] 
 set statusline+=\ \ \ %<%20.30(%{hostname()}:%{CurDir()}%)\ 
