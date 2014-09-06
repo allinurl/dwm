@@ -11,17 +11,18 @@ set clipboard=unnamedplus
 set hlsearch         " highlight searches
 set incsearch        " do incremental searching
 set listchars=tab:>-
+set nomodeline       " disable mode lines (security measure)
 set novisualbell     " turn off visual bell
 set nowrap
 set number           " show line numbers
-set title            " make your xterm inherit the title from Vim
 set ruler            " show the cursor position all the time
 set scrolloff=3      " keep 3 lines when scrolling
+set shortmess+=I                " hide the launch screen
 set showcmd          " display incomplete commands
 set showmode         " always show what mode we're currently editing in
 set tabpagemax=50
+set title            " make your xterm inherit the title from Vim
 set ttyfast          " don't lag…
-set nomodeline       " disable mode lines (security measure)
 set visualbell t_vb= " turn off error beep/flash
 set wildmenu         " enhanced tab-completion shows all matching cmds in a popup menu
 set wildmode=list:longest,full  " full completion options
@@ -43,7 +44,7 @@ set nowritebackup
 
 set directory=~/.vim/.tmp,~/tmp,/tmp
                                 " store swap files in one of these directories
-                                "    (in case swapfile is ever turned on)
+                                " (in case swapfile is ever turned on)
 
 "autocmd BufRead,BufNewFile * syn match parens /[(){}]/ | hi parens ctermfg=cyan
 
