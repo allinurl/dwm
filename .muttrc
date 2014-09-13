@@ -56,7 +56,7 @@ unignore x-mailing-list: posted-to:
 unignore x-mailer:
 
 color attachment color221  default
-color error      color124  default
+color error      color167  default
 color indicator  color253  color235
 color markers    yellow    default
 color message    yellow    default
