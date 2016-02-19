@@ -39,7 +39,7 @@ static const char *tags[] = {
 static const Rule rules[] = {
   /*WM_CLASS     WM_CLASS WM_NAME
      class        instance title          tags mask   isfloating  monitor */
-  {"Chromium", NULL, NULL, 1 << 3, False, -1},
+  {"chromium", NULL, NULL, 1 << 3, False, -1},
 };
 
 /* layout(s) */
