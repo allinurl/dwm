@@ -2,10 +2,8 @@
 
 /* See LICENSE file for copyright and license details. */
 
-/* appearance */
-static const char font[] =
-  "-*-stlarch-medium-r-*-*-10-*-*-*-*-*-*-*" ","
-  "-*-terminus-medium-r-*-*-12-*-*-*-*-*-*-*";
+static const char font[] = "-wuncon-siji-medium-r-normal--10-100-75-75-c-80-iso10646-1" ","
+                           "-misc-fixed-medium-r-semicondensed-*-12-90-100-100-c-60-iso8859-1";
 
 #define NUMCOLORS 8
 static const char colors[NUMCOLORS][ColLast][9] = {
@@ -67,7 +65,7 @@ static const Layout layouts[] = {
 
 /* commands */
 static const char *dmenucmd[] =
-  { "dmenu_run", "-fn", font, "-nb", colors[0][ColBG], "-nf", colors[0][ColFG],
+  { "dmenu_run", "-fn", "Fixed-8", "-nb", colors[0][ColBG], "-nf", colors[0][ColFG],
   "-sb", colors[1][ColBG], "-sf", colors[1][ColFG], NULL
 };
 static const char *termcmd[] = { "uxterm", NULL };
