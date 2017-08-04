@@ -6,26 +6,20 @@ static const char *fonts[]    = { "Wuncon Siji:size=10", "xos4 Terminus:size=9" 
 static const char dmenufont[] = "xos4 Terminus:size=9";
 
 static const char col1[] = "#212121";
-static const char col2[] = "#121212";
+static const char col2[] = "#1C1C1C";
 static const char col3[] = "#696969";
 static const char col4[] = "#E0E0E0";
 static const char col5[] = "#4586de";
 static const char col6[] = "#7bde45";
 static const char col7[] = "#fedd26";
-static const char col8[] = "#e55555";
+static const char col8[] = "#ff0000";
 static const char col9[] = "#006699";
 static const char col0[] = "#C0C0C0";
 
 static const char *colors[][3]      = {
 	/*               fg    bg    border   */
 	[SchemeNorm] = { col3, col2, col1},
-	[SchemeSel]  = { col4, col2, col1},
-	[SchemeSel]  = { col5, col2, col1},
-	[SchemeSel]  = { col6, col2, col1},
-	[SchemeSel]  = { col7, col2, col1},
-	[SchemeSel]  = { col8, col2, col1},
-	[SchemeSel]  = { col9, col2, col1},
-	[SchemeSel]  = { col0, col2, col1},
+	[SchemeSel]  = { col0, col1, col1},
 };
 
 static const unsigned int borderpx = 1; /* border pixel of windows   */
@@ -50,7 +44,7 @@ static const Rule rules[] = {
 	 *	WM_NAME(STRING) = title
 	 */
 	/* class      instance    title       tags mask     isfloating   monitor */
-	{ "chromium",  NULL,       NULL,       1 << 4,       0,           -1 },
+	{ "Chromium",  NULL,       NULL,       1 << 3,       0,           -1 },
 };
 
 /* layout(s) */
@@ -80,7 +74,7 @@ static const Layout layouts[] = {
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
 static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col3, "-nf", col1, "-sb", col2, "-sf", col3, NULL };
 static const char *termcmd[]  = { "uxterm", NULL };
-static const char *browser[]  = { "chromium", NULL };
+static const char *browser[]  = { "chromium", NULL, "Chromium"};
 
 static Key keys[] = {
   /* modifier                     key        function        argument */
