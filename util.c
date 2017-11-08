@@ -12,7 +12,7 @@ ecalloc(size_t nmemb, size_t size)
 	void *p;
 
 	if (!(p = calloc(nmemb, size)))
-		die("calloc:");
+		perror(NULL);
 	return p;
 }
 
@@ -27,8 +27,6 @@ die(const char *fmt, ...) {
 	if (fmt[0] && fmt[strlen(fmt)-1] == ':') {
 		fputc(' ', stderr);
 		perror(NULL);
-	} else {
-		fputc('\n', stderr);
 	}
 
 	exit(1);
