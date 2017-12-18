@@ -55,9 +55,9 @@ static const Bool resizehints = 0;    /* True means respect size hints in tiled 
 
 static const Layout layouts[] = {
   /* symbol     arrange function */
-  {"\uE005", tile},
-  {"\uE011", NULL},
-  {"[M]",    monocle},
+  {"\uE005" , tile}    , 
+  {"\uE011" , NULL}    , 
+  {"[M]"    , monocle} , 
 };
 
 /* key definitions */
