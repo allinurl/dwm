@@ -88,6 +88,7 @@ static Key keys[] = {
   {0                    , 0x1008ff03 , spawn          , SHCMD ("xbacklight -dec 10")},
   {0                    , 0x1008ff11 , spawn          , SHCMD ("amixer sset Master 5dB- unmute")},
   {0                    , 0x1008ff12 , spawn          , SHCMD ("amixer sset Master mute ")},
+  {0                    , 0x1008ff13 , spawn          , SHCMD ("amixer sset Master 5dB+ unmute")},
   {0                    , 0x1008ff59 , spawn          , SHCMD ("$HOME/.xrandr-toggle")},
   {MODKEY               , XK_b       , togglebar      , {0}},
   {MODKEY               , XK_Right   , focusstack     , {.i = +1}},
