@@ -10,18 +10,20 @@ In order to build dwm you need the Xlib header files.
 
 Installation
 ------------
-Edit config.mk to match your local setup (dwm is installed into
-the /usr/local namespace by default).
+Simply clone it and build. e.g.,
 
-Afterwards enter the following command to build and install dwm (if
-necessary as root):
-
-    make clean install
+    $ git clone https://github.com/allinurl/dwm.git && cd dwm
+    $ make
+    # make install
 
 Install bitmap fonts
 
     $ git clone https://github.com/stark/siji && cd siji
     $ ./install.sh -d ~/.fonts
+    
+Place your .xinitrc in your home directory. See my [dotfiles](https://github.com/allinurl/dotfiles/blob/master/.xinitrc) repo. You're good to go at this point.
+
+    $ startx
 
 
 Running dwm
