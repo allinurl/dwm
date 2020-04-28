@@ -24,6 +24,8 @@ Install bitmap fonts
 Place your .xinitrc in your home directory. See my [dotfiles](https://github.com/allinurl/dotfiles/blob/master/.xinitrc) repo. You're good to go at this point.
 
     $ startx
+    
+Enjoy!
 
 
 Running dwm
