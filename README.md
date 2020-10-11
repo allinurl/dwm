@@ -21,7 +21,12 @@ Install bitmap fonts
     $ git clone https://github.com/stark/siji && cd siji
     $ ./install.sh -d ~/.fonts
     
-Place your .xinitrc in your home directory. See my [dotfiles](https://github.com/allinurl/dotfiles/blob/master/.xinitrc) repo. You're good to go at this point.
+Place your .xinitrc in your home directory. See my [dotfiles](https://github.com/allinurl/dotfiles/blob/master/.xinitrc) repo. 
+
+    $ cd
+    $ wget https://github.com/allinurl/dotfiles/blob/master/.xinitrc
+
+And you're good to go at this point.
 
     $ startx
     
