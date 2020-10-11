@@ -33,7 +33,7 @@ And you're good to go at this point.
 Enjoy!
 
 
-Running dwm
+Running dwm (custom xinitrc)
 -----------
 Add the following line to your .xinitrc to start dwm using startx:
 
