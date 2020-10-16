@@ -34,7 +34,7 @@ Enjoy!
 
 Custom Configuration
 ------------
-Take a look at the [*config.h*](https://github.com/allinurl/dwm/blob/master/config.h) if you are interested to change some of the key bindings. Though, you should have enough flexibility with the current setup.
+Take a look at the [**config.h**](https://github.com/allinurl/dwm/blob/master/config.h) if you are interested to change some of the key bindings. Though, you should have enough flexibility with the current setup.
 
 
 Running dwm (custom xinitrc)
