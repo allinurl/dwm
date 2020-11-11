@@ -34,7 +34,7 @@ Enjoy!
 
 Custom Configuration
 ------------
-Take a look at the [**config.h**](https://github.com/allinurl/dwm/blob/master/config.h) if you are interested to change some of the key bindings. Though, you should have enough flexibility with the current setup.
+The configuration of dwm is done by creating a custom config.h and (re)compiling the source code. Take a look at the [**config.h**](https://github.com/allinurl/dwm/blob/master/config.h) if you are interested to change some of the key bindings. Though, you should have enough flexibility with the current setup.
 
 
 Running dwm (custom xinitrc)
@@ -58,9 +58,3 @@ like this in your .xinitrc:
     	sleep 1
     done &
     exec dwm
-
-
-Configuration
--------------
-The configuration of dwm is done by creating a custom config.h
-and (re)compiling the source code.
