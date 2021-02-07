@@ -84,7 +84,7 @@ static Key keys[] = {
   {MODKEY | ControlMask , XK_g       , spawn          , SHCMD ("chromium --proxy-server='socks5://localhost:9000'")},
   {MODKEY | ShiftMask   , XK_g       , spawn          , SHCMD ("chromium --user-data-dir=$HOME/.config/chromium/local --incognito")},
   {MODKEY               , XK_Escape  , spawn          , SHCMD ("xscreensaver-command -lock")},
-  {MODKEY | ShiftMask   , XK_Return  , spawn          , SHCMD ("tabbed -c xterm -into")},
+  {MODKEY | ShiftMask   , XK_Return  , spawn          , SHCMD ("tabbed -c uxterm -into")},
   {0                    , 0x1008ff02 , spawn          , SHCMD ("xbacklight -inc 10")},
   {0                    , 0x1008ff03 , spawn          , SHCMD ("xbacklight -dec 10")},
   {0                    , 0x1008ff11 , spawn          , SHCMD ("amixer sset Master 5%- unmute")},
