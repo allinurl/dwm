@@ -46,7 +46,6 @@ static const Rule rules[] = {
 	 */
 	/* class      instance    title       tags mask     isfloating   monitor */
 	{ "Chromium"         ,  NULL,       NULL,       1 << 3,       0,           -1 },
-	{ "ChromiumIncognito",  NULL,       NULL,       1 << 4,       0,           -1 },
 };
 
 /* layout(s) */
@@ -77,13 +76,12 @@ static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() 
 static const char *dmenucmd[]    = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col3, "-nf", col1, "-sb", col2, "-sf", col3, NULL };
 static const char *termcmd[]     = { "uxterm", NULL };
 static const char *browser[]     = { "chromium", NULL, "Chromium"};
-static const char *bincognito[]  = { "chromium --user-data-dir=$HOME/.config/chromium/local --incognito", NULL, "ChromiumIncognito"};
 
 static Key keys[] = {
   /* modifier               key        function        argument */
   {MODKEY               , XK_p       , spawn          , {.v = dmenucmd}},
   {MODKEY               , XK_g       , spawn          , {.v = browser}},
-  {MODKEY | ShiftMask   , XK_g       , spawn          , {.v = bincognito}},
+  {MODKEY | ShiftMask   , XK_g       , spawn          , SHCMD ("chromium --user-data-dir=$HOME/.config/chromium/local --incognito")},
   {MODKEY | ControlMask , XK_g       , spawn          , SHCMD ("chromium --proxy-server='socks5://localhost:9000'")},
   {MODKEY               , XK_Escape  , spawn          , SHCMD ("xscreensaver-command -lock")},
   {MODKEY | ShiftMask   , XK_Return  , spawn          , SHCMD ("tabbed -c uxterm -into")},
