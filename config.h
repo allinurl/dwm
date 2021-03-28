@@ -73,9 +73,9 @@ static const Layout layouts[] = {
 
 /* commands */
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
+static const char *browser[]     = { "chromium", NULL, "Chromium"};
 static const char *dmenucmd[]    = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col3, "-nf", col1, "-sb", col2, "-sf", col3, NULL };
 static const char *termcmd[]     = { "uxterm", NULL };
-static const char *browser[]     = { "chromium", NULL, "Chromium"};
 
 static Key keys[] = {
   /* modifier               key        function        argument */
