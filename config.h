@@ -81,8 +81,8 @@ static Key keys[] = {
   /* modifier               key        function        argument */
   {MODKEY               , XK_p       , spawn          , {.v = dmenucmd}},
   {MODKEY               , XK_g       , spawn          , {.v = browser}},
-  {MODKEY | ShiftMask   , XK_g       , spawn          , SHCMD ("chromium --user-data-dir=$HOME/.config/chromium/local --incognito")},
   {MODKEY | ControlMask , XK_g       , spawn          , SHCMD ("chromium --proxy-server='socks5://localhost:9000'")},
+  {MODKEY | ShiftMask   , XK_g       , spawn          , SHCMD ("chromium --user-data-dir=$HOME/.config/chromium/local --incognito")},
   {MODKEY               , XK_Escape  , spawn          , SHCMD ("xscreensaver-command -lock")},
   {MODKEY | ShiftMask   , XK_Return  , spawn          , SHCMD ("tabbed -c uxterm -into")},
   {0                    , 0x1008ff02 , spawn          , SHCMD ("xbacklight -inc 10")},
