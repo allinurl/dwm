@@ -72,6 +72,9 @@ static const Layout layouts[] = {
 /* helper for spawning shell commands in the pre dwm-5.0 fashion */
 #define SHCMD(cmd) { .v = (const char*[]){ "/bin/sh", "-c", cmd, NULL } }
 
+#define KEYEVENT(SRC_MOD,SRC_KEY,DST_MOD,DST_KEY) \
+	{ SRC_MOD, SRC_KEY, sendkeyevent, { .v = &(const KeyBinding){ DST_MOD, DST_KEY } } },
+
 /* commands */
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
 static const char *browser[]     = { "chromium", NULL, "Chromium"};
@@ -86,11 +89,11 @@ static Key keys[] = {
   {MODKEY               , XK_g       , spawn          , {.v = browser}},
   {MODKEY               , XK_Escape  , spawn          , SHCMD("sh -c 'xlock -mode blank & sleep 1; xset dpms force off'") },
   {MODKEY | ShiftMask   , XK_Return  , spawn          , SHCMD ("tabbed -c uxterm -into")},
-  {0                    , 0x1008ff02 , spawn          , SHCMD ("xbacklight -inc 10")},
-  {0                    , 0x1008ff03 , spawn          , SHCMD ("xbacklight -dec 10")},
-  {0                    , 0x1008ff11 , spawn          , SHCMD ("amixer sset Master 5%- unmute")},
-  {0                    , 0x1008ff12 , spawn          , SHCMD ("amixer sset Master mute ")},
-  {0                    , 0x1008ff13 , spawn          , SHCMD ("amixer sset Master 5%+ unmute")},
+  {0                    , 0x1008ff02 , spawn          , SHCMD ("brightnessctl set +10%")},
+  {0                    , 0x1008ff03 , spawn          , SHCMD ("brightnessctl set 10%-")},
+  {0                    , 0x1008ff11 , spawn          , SHCMD("wpctl set-volume -l 1.0 @DEFAULT_AUDIO_SINK@ 5%-") },
+  {0                    , 0x1008ff12 , spawn          , SHCMD("wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle") },
+  {0                    , 0x1008ff13 , spawn          , SHCMD("wpctl set-volume -l 1.0 @DEFAULT_AUDIO_SINK@ 5%+") },
   {0                    , 0x1008ff59 , spawn          , SHCMD ("$HOME/.xrandr-toggle")},
   {MODKEY               , XK_b       , togglebar      , {0}},
   {MODKEY               , XK_Right   , focusstack     , {.i = +1}},
@@ -115,8 +118,48 @@ static Key keys[] = {
   {MODKEY               , XK_period  , focusmon       , {.i = +1}},
   {MODKEY | ShiftMask   , XK_comma   , tagmon         , {.i = -1}},
   {MODKEY | ShiftMask   , XK_period  , tagmon         , {.i = +1}},
+
+	// Navigation(two-handed)
+	KEYEVENT(Mod1Mask, XK_h, 0, XK_Left)
+	KEYEVENT(Mod1Mask, XK_l, 0, XK_Right)
+	KEYEVENT(Mod1Mask, XK_k, 0, XK_Up)
+	KEYEVENT(Mod1Mask, XK_j, 0, XK_Down)
+	KEYEVENT(Mod1Mask, XK_p, 0, XK_Up)
+	KEYEVENT(Mod1Mask, XK_n, 0, XK_Down)
+	KEYEVENT(Mod1Mask, XK_i, ControlMask, XK_Left)
+	KEYEVENT(Mod1Mask, XK_o, ControlMask, XK_Right)
+	KEYEVENT(Mod1Mask, XK_equal, ControlMask, XK_Home)
+	KEYEVENT(Mod1Mask, XK_minus, ControlMask, XK_End)
+	// Navigation(one-handed)
+	KEYEVENT(Mod1Mask, XK_s, 0, XK_Up)
+	KEYEVENT(Mod1Mask, XK_x, 0, XK_Down)
+	KEYEVENT(Mod1Mask, XK_z, 0, XK_Left)
+	KEYEVENT(Mod1Mask, XK_c, 0, XK_Right)
+	KEYEVENT(Mod1Mask, XK_d, 0, XK_Return)
+	KEYEVENT(Mod1Mask, XK_a, 0, XK_Home)
+	KEYEVENT(Mod1Mask, XK_e, 0, XK_End)
+	// Selection(two-handed)
+	KEYEVENT(Mod1Mask|ShiftMask, XK_h, ShiftMask, XK_Left)
+	KEYEVENT(Mod1Mask|ShiftMask, XK_l, ShiftMask, XK_Right)
+	KEYEVENT(Mod1Mask|ShiftMask, XK_k, ShiftMask, XK_Up)
+	KEYEVENT(Mod1Mask|ShiftMask, XK_j, ShiftMask, XK_Down)
+	KEYEVENT(Mod1Mask|ShiftMask, XK_p, ShiftMask, XK_Up)
+	KEYEVENT(Mod1Mask|ShiftMask, XK_n, ShiftMask, XK_Down)
+	KEYEVENT(Mod1Mask|ShiftMask, XK_i, ControlMask|ShiftMask, XK_Left)
+	KEYEVENT(Mod1Mask|ShiftMask, XK_o, ControlMask|ShiftMask, XK_Right)
+	KEYEVENT(Mod1Mask|ShiftMask, XK_equal, ControlMask|ShiftMask, XK_Home)
+	KEYEVENT(Mod1Mask|ShiftMask, XK_minus, ControlMask|ShiftMask, XK_End)
+	// Selection(one-handed)
+	KEYEVENT(Mod1Mask|ShiftMask, XK_s, ShiftMask, XK_Up)
+	KEYEVENT(Mod1Mask|ShiftMask, XK_x, ShiftMask, XK_Down)
+	KEYEVENT(Mod1Mask|ShiftMask, XK_z, ShiftMask, XK_Left)
+	KEYEVENT(Mod1Mask|ShiftMask, XK_c, ShiftMask, XK_Right)
+	KEYEVENT(Mod1Mask|ShiftMask, XK_a, ShiftMask, XK_Home)
+	KEYEVENT(Mod1Mask|ShiftMask, XK_e, ShiftMask, XK_End)
+
   //{MODKEY | ControlMask , XK_j     , pushdown       , {0}},
   //{MODKEY | ControlMask , XK_k     , pushup         , {0}},
+    // Custom remapping for Home and End keys
   TAGKEYS (XK_1, 0)
   TAGKEYS (XK_2, 1)
   TAGKEYS (XK_3, 2)
