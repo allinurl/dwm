@@ -79,7 +79,7 @@ static const Layout layouts[] = {
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
 static const char *browser[]     = { "chromium", NULL, "Chromium"};
 static const char *dmenucmd[]    = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col3, "-nf", col1, "-sb", col2, "-sf", col3, NULL };
-static const char *termcmd[]     = { "uxterm", NULL };
+static const char *termcmd[]     = { "xterm", "-fa", "Terminus", "-fs", "9", "-u8", NULL };
 
 static Key keys[] = {
   /* modifier               key        function        argument */
@@ -88,7 +88,7 @@ static Key keys[] = {
   {MODKEY | ShiftMask   , XK_g       , spawn          , SHCMD ("chromium --user-data-dir=$HOME/.config/chromium/local --incognito")},
   {MODKEY               , XK_g       , spawn          , {.v = browser}},
   {MODKEY               , XK_Escape  , spawn          , SHCMD("sh -c 'xlock -mode blank & sleep 1; xset dpms force off'") },
-  {MODKEY | ShiftMask   , XK_Return  , spawn          , SHCMD ("tabbed -c uxterm -into")},
+  {MODKEY | ShiftMask   , XK_Return  , spawn          , SHCMD("tabbed -c xterm -fa Terminus -fs 9 -u8 -into") },
   {0                    , 0x1008ff02 , spawn          , SHCMD ("brightnessctl set +10%")},
   {0                    , 0x1008ff03 , spawn          , SHCMD ("brightnessctl set 10%-")},
   {0                    , 0x1008ff11 , spawn          , SHCMD("wpctl set-volume -l 1.0 @DEFAULT_AUDIO_SINK@ 5%-") },
